@@ -10,6 +10,10 @@ library(dplyr)
 library(plotly)
 ```
 
+Corona Virus Disease 2019，COVID-19, refers to the contagious disease caused by severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2), and it is an ongoing pandemic till today.
+
+The following interactive treemap demonstrates the total number of confirmed cases by countries as of 30 August 2021. We can see the United States has the largest amount of confirmed cases with 39,057,368 account for 18% around the world, and India is the second place with 15%. You can get the cumulative confirmed cases number of other countires through clicking on the treemap.
+
 ```{r}
 library(coronavirus)
 coronavirus <- coronavirus
@@ -32,3 +36,10 @@ plot_ly(data = conf_df,
           textinfo="label+value+percent parent")
 ```
 
+For further detailed COVID-19 data on the breakdown to countries, please click the 'Posts' on the upper right corner of the website! 😆
+
+
+
+### Data source ⚙️
+
+Rami Krispin and Jarrett Byrnes (2021). coronavirus: The 2019 Novel Coronavirus COVID-19 (2019-nCoV) Dataset. R package version 0.3.22. https://github.com/RamiKrispin/coronavirus
