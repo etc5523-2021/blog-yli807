@@ -1,0 +1,50 @@
+
+nav.distill-site-nav.distill-site-header{
+  background-color:#9c87a8;
+}
+
+a{
+  font-family : "Gochi Hand";
+}
+
+a.name{
+   font-family : Corbel;
+}
+d-title h1 {
+  font-family : Unna;
+  font-size: 50px;
+}
+
+d-title p{
+  font-family : Unna;
+}
+
+d-article a{
+  font-family : Corbel
+}
+
+h1{
+  font-family : Unna;
+  font-size: 30pt;
+}
+
+h2{
+  font-family : Unna;
+  font-size : 25pt;
+}
+
+
+.posts-list .description h2, .posts-list .description p {
+  font-family : Unna;
+}
+
+
+h3{
+  font-family : Unna;
+  font-size : 20pt;
+}
+
+
+p{
+  font-family : Corbel;
+}
