@@ -1,0 +1,183 @@
+---
+title: "Coronavirus disease in Egypt"
+description: |
+  as of 30 August 2021 
+author:
+  - name: Yanhui LI
+date: 08-30-2021
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(tab.align = "center",
+                      fig.align = "center",
+                      echo = FALSE)
+
+library(dplyr)
+library(tidyr)
+library(plotly)
+library(ggplot2)
+library(scales)
+library(tidyverse)
+library(naniar)
+```
+
+
+# Data description
+
+The data sets used in this blog post can mainly breakdown into two parts. 
+
+The first two tables illustrate the specific information such as confirmed cases, deaths and recovered cases of COVID-19 are created based on data from *tidycovid19* package by Joachim Gassen.
+
+The data of the last interactive table demonstrates the vaccination are collected and maintained by *Our World in Data*, in a completely open access under the Creative Commons BY license. In this blog post, three csv files were selected for the vaccination analysis: cumulative-covid-vaccinations, people-vaccinated-covid and share-people-fully-vaccinated-covid.
+
+
+As Egypt is the main observation country, while filtering the dataset, countries that with the same region as Egypt also remained as a comparative analysis.
+
+
+
+# Coronavirus (COVID-19) Cases in Egypt
+
+As of August 30, 2021, 288,162 confirmed cases of COVID-19 and 16,727 in Egypt were acknowledged by the Ministry of Health and Population. 
+
+Except for the basic information, other specific collection which are active cases in current, death rate, total recovered cases and recover rate are shown in following Table \@ref(tab:egydf).
+
+
+
+```{r}
+library(tidycovid19)
+#df <- download_merged_data(cached = TRUE, silent = TRUE) : save to csv to easy knit
+df <- read_csv(here::here("/Users/yanhuili/Desktop/yli807-BlogEntry/df.csv"))
+```
+
+```{r egydf, fig.cap="Covid19 Cases in Egypt as of August 30, 2021"}
+egydf <- df %>% 
+  filter(iso3c == "EGY") %>% 
+  select(-c(`ecdc_cases`:`timestamp`))
+# fill in the missing data from  4 Aug 2021 - 30 Aug 2021
+egydf <- read_csv(here::here("/Users/yanhuili/Desktop/yli807-BlogEntry/egydf.csv"))
+
+egydf1 <- egydf %>% 
+  filter(date == "30/08/2021") %>% 
+  select(-c(`iso3c`:`date`)) %>% 
+  mutate(active = confirmed - deaths - recovered,
+         deathRate = (deaths/confirmed)*100,
+         recoverRate =(recovered/confirmed)*100) %>% 
+  relocate(active, .before = confirmed) %>% 
+  relocate(recovered, .before = recoverRate) 
+  
+  
+
+library(gt)
+gt(egydf1,caption = "Total Covid19 Cases in Egypt") %>% 
+  tab_header(title = "Distribution of Covid19 Cases in Egypt",
+             subtitle = "as of August 30, 2021") %>% 
+  tab_source_note(md("Source: JHU CCSE")) %>% 
+  cols_label(active = html("Current<br>Active"),
+             confirmed = html("Total<br> Confirmed"),
+             deaths = html("Total<br> Deaths"),
+             deathRate = html("Death<br> Rate"),
+             recovered = html("Total<br> Recovered"),
+             recoverRate = html("Recover<br> Rate"))
+
+
+
+```
+
+
+
+## Egypt situation within its region, Middle East & North Africa
+
+The below table shows the COVID-19 Cases in Middle East & North Africa, the region that Egypt belongs to. Egypt is ranking 14 out of 21 in total amount of confirmed cases, however, the death rate is top 3 with 5.8%, even higher than Iran, which has the largest number of confirmed cases with 4,960,744 in this region, 17 times more than Egypt.
+
+It is worth pointing out that Yemen is the country with the lowest confirmed case of 7,829 in this region, but has the largest death rate at 18.76%. This might because Yemen is one of the poorest of the world's low income country, with a GDP per capita around 633USD in 2010. Therefore, reasons why they has the smallest confirmed cases and largest mortality rate might because they do not have enough capital to maintain their medical resources, like testing and treatment.
+
+
+```{r africadf,fig.cap="Covid19 Cases in Middle East & North Africa"}
+africacovid <- df %>% 
+  filter(date == "2021-08-30") %>% 
+  filter(region == "Middle East & North Africa") %>% 
+  select(c(`country`,`confirmed`,`deaths`,`gdp_capita`,`income`)) %>% 
+  mutate(confirmed = as.double(confirmed),
+         deathRate = (deaths/confirmed)*100) %>% 
+  relocate(deathRate, .before = gdp_capita) %>%
+  arrange(desc(confirmed)) 
+
+africacovid$gdp_capita[19]<-2807.0000
+africacovid$gdp_capita[20]<-1343.2700
+
+africadf <- africacovid %>% 
+  select(-`deaths`) %>% 
+  mutate(Rank = 1:nrow(africacovid)) %>% 
+  relocate(Rank, .before = country) %>% 
+  mutate(deathRank = order(order(deathRate, decreasing = T))) %>% 
+  relocate(deathRank, .before = gdp_capita) %>%
+  mutate(gdpCapitaRank = order(order(gdp_capita, decreasing = T))) %>% 
+  rename(gdpCapita_2010 = `gdp_capita`) %>% 
+  relocate(income, .after = gdpCapitaRank) %>% 
+  rename(Income_level = `income`)
+
+library(kableExtra)
+library(formattable)
+
+
+formattable(africadf, list(
+    confirmed = color_tile("transparent", "#7c7ed6"),
+    deathRate = color_tile("transparent", "lightpink"),
+    gdpCapita_2010 = color_tile("transparent", "#7DCEA0")
+    ),
+    align = "c")
+
+```
+
+
+Back to Egypt, it ranks 17th in the GDP per capita. As a lower middle income country, it is not their willingness to have such a high death rate. For further observation, vaccinations situation should be explored as well.
+
+
+
+
+# Coronavirus (COVID-19) Vaccinations in Egypt
+
+The following table shows the total number COVID-19 vaccinations dosed administered, total number of people who have received at least one dose of the COVID-19 vaccine, and share of the population fully vaccinated against COVID-19. As the table shows, a few Egyptian finished their second dose of vaccination since May 2021. But as of the latest data, on August 27,2021, only 3% of people in Egypt are fully vaccinated. In other words, the coronavirus still poses a serious threat to the immune system of most Egyptians.
+
+```{r egyvac, fig.cap="Vaccinations information in Egypt"}
+totalvac_egy <- read_csv(here::here("/Users/yanhuili/Desktop/yli807-BlogEntry/cumulative-covid-vaccinations.csv")) %>% 
+  filter(Code == "EGY")
+
+onevac_egy <-read_csv(here::here("/Users/yanhuili/Desktop/yli807-BlogEntry/people-vaccinated-covid.csv")) %>% 
+  filter(Code == "EGY") %>% 
+  select(-`145608-annotations`)
+
+receviedall_egy <- read_csv(here::here("/Users/yanhuili/Desktop/yli807-BlogEntry/share-people-fully-vaccinated-covid.csv")) %>% 
+  filter(Code == "EGY") %>% 
+  select(-`145609-annotations`)
+
+vacdoses <- left_join(totalvac_egy,onevac_egy) 
+
+egyvac <- left_join(vacdoses,receviedall_egy) %>% 
+  replace(is.na(.), 0) %>% 
+  rename(Country = `Entity`,
+         Date = `Day`,
+         Total_doses =`total_vaccinations` ,
+         One_dose = `people_vaccinated`,
+         Fully_vaccinated_rate = `people_fully_vaccinated_per_hundred`) %>%
+  relocate(One_dose,.before = Total_doses)
+
+
+
+DT::datatable(egyvac, options = list(pageLength = 10))
+```
+
+
+## Data source
+
+Joachim Gassen (NA). tidycovid19: Download, Tidy and Visualize Covid-19
+Related Data. R package version 0.0.0.9000.
+
+
+Mathieu, E., Ritchie, H., Ortiz-Ospina, E. et al. A global database of COVID-19 vaccinations. Nat Hum Behav (2021). https://doi.org/10.1038/s41562-021-01122-8
+
+
