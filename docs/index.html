@@ -86,26 +86,26 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </style>
 
   <!--radix_placeholder_meta_tags-->
-  <title>My Blog</title>
+  <title>Yanhui LI's Blog for Coronavirus (COVID-19) Cases: Coronavirus (COVID-19) Data Collections</title>
 
 
 
 
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="My Blog"/>
+  <meta property="og:title" content="Yanhui LI&#39;s Blog for Coronavirus (COVID-19) Cases: Coronavirus (COVID-19) Data Collections"/>
   <meta property="og:type" content="article"/>
   <meta property="og:locale" content="en_US"/>
-  <meta property="og:site_name" content="My Blog"/>
+  <meta property="og:site_name" content="Yanhui LI&#39;s Blog for Coronavirus (COVID-19) Cases"/>
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="My Blog"/>
+  <meta property="twitter:title" content="Yanhui LI&#39;s Blog for Coronavirus (COVID-19) Cases: Coronavirus (COVID-19) Data Collections"/>
 
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","site","listing"]}},"value":[{"type":"character","attributes":{},"value":["My Blog"]},{"type":"character","attributes":{},"value":["distill::distill_website"]},{"type":"character","attributes":{},"value":["posts"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","site"]}},"value":[{"type":"character","attributes":{},"value":["Coronavirus (COVID-19) Data Collections"]},{"type":"character","attributes":{},"value":["distill::distill_website"]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2031,6 +2031,14 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
   <!--/radix_placeholder_distill-->
   <script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+  <script src="site_libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+  <script src="site_libs/plotly-binding-4.9.4.1/plotly.js"></script>
+  <script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+  <script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+  <link href="site_libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+  <script src="site_libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
+  <link href="site_libs/plotly-htmlwidgets-css-1.57.1/plotly-htmlwidgets.css" rel="stylesheet" />
+  <script src="site_libs/plotly-main-1.57.1/plotly-latest.min.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2045,12 +2053,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 </head>
 
-<body class="layout-listing">
+<body>
 
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"My Blog","authors":[]}
+{"title":"Coronavirus (COVID-19) Data Collections","authors":[]}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2058,11 +2066,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <header class="header header--fixed" role="banner">
 <nav class="distill-site-nav distill-site-header">
 <div class="nav-left">
-<a href="index.html" class="title">My Blog</a>
+<a href="index.html" class="title">Yanhui LI's Blog for Coronavirus (COVID-19) Cases</a>
 <input id="distill-search" class="nav-search hidden" type="text" placeholder="Search..."/>
 </div>
 <div class="nav-right">
 <a href="index.html">Home</a>
+<a href="post.html">Posts</a>
 <a href="about.html">About</a>
 <a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
 </div>
@@ -2071,185 +2080,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--/radix_placeholder_navigation_before_body-->
 <!--radix_placeholder_site_before_body-->
 <!--/radix_placeholder_site_before_body-->
-<!--radix_placeholder_article_listing-->
-
-
-<script type="application/javascript">
-
-function init_posts_list() {
-
-  function load_image(img) {
-    var src = $(img).attr('data-src');
-    if (src) {
-      $(img).attr('src', src);
-      $(img).load(function() {
-        img.removeAttribute('data-src');
-      });
-    }
-  }
-
-  function set_posts_visible(posts, visible) {
-    if (visible) {
-
-      // show bottom border by default
-      $(posts).removeClass('post-preview-last');
-
-      // apply limits if need be
-      var max_posts = 25;
-      var apply_limits = $('.posts-container').hasClass('posts-apply-limit');
-      if (apply_limits && posts.length > max_posts) {
-        posts = $(posts).slice(0, max_posts);
-      } else {
-        $('.posts-more a').addClass('hidden');
-      }
-
-      // apply last style
-      $(posts.slice(-1)[0]).addClass('post-preview-last');
-
-      $(posts).removeClass('hidden');
-      $(posts).find('img[data-src]').each(function(i, img) {
-        load_image(img);
-      });
-    } else {
-      $(posts).addClass('hidden');
-    }
-  }
-
-  function apply_hash_filter() {
-
-    // clear active state
-    $('.categories .active').removeClass('active');
-
-    // mark all posts invisible to start
-    set_posts_visible($('.posts-list').children('a'), false);
-
-    // if we have a hash filter
-    if (window.location.hash && window.location.hash.startsWith("#category:")) {
-
-      // mark posts that match the category visible
-      var page_category = window.location.hash.replace(/^#category:/, "");
-      var posts = $('.post-metadata').map(function(idx, script) {
-        var metadata = $.parseJSON($(script).html());
-        var post = null;
-        $.each(metadata.categories, function(idx, category) {
-          category = category.replace(/ /g,"_");
-          if ((page_category || '').toLowerCase() === "articles" || category === page_category) {
-            post = $(script).parent().get();
-            return false;
-          }
-        });
-        return post;
-      });
-      set_posts_visible(posts, true);
-
-      // mark the hash active
-      $('.categories li>a[href="' + window.location.hash + '"]').addClass('active');
-
-      // update the list_caption
-      var list_caption = $('.posts-list-caption');
-      var caption = (page_category || '').toLowerCase() === "articles"
-        ? list_caption.attr('data-caption')
-        : ('Category: ' + page_category.replace(/_/g," "));
-      list_caption.text(caption);
-
-    } else {
-
-      // no hash filter, make all posts visible (subject to max display)
-      set_posts_visible($('.posts-list').children(), true);
-
-      // reset list caption
-      var list_caption = $('.posts-list-caption');
-      list_caption.text(list_caption.attr('data-caption'));
-
-
-    }
-  }
-
-  // more articles
-  function apply_post_limits(apply) {
-    if (apply) {
-      $('.posts-container').addClass('posts-apply-limit');
-      $('.posts-more a').removeClass('hidden');
-    } else {
-      $('.posts-container').removeClass('posts-apply-limit');
-      $('.posts-more a').addClass('hidden');
-    }
-  }
-
-  // click handling for tags
-  $('.dt-tag').click(function(ev) {
-    window.location.hash = '#category:' + $(this).text().replace(/ /g, "_");
-    return false;
-  })
-
-  // hash filter handling
-  apply_hash_filter();
-  $(window).on('hashchange',function() {
-    apply_post_limits(true);
-    apply_hash_filter();
-  });
-
-  // more articles link
-  $('.posts-more a').click(function(e) {
-    e.preventDefault();
-    apply_post_limits(false);
-    apply_hash_filter();
-    return false;
-  });
-
-}
-
-</script>
-
-
-
-<div class="posts-container posts-apply-limit l-page">
-<div class="posts-list">
-<h1 class="posts-list-caption" data-caption="My Blog">My Blog</h1>
-<a href="posts/welcome/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">Sept. 2, 2021</div>
-<div class="dt-authors">
-<div class="dt-author">Nora Jones</div>
-</div>
-</div>
-<div class="thumbnail">
-<img/>
-</div>
-<div class="description">
-<h2>Welcome to My Blog</h2>
-<div class="dt-tags"></div>
-<p>Welcome to our new blog, My Blog. We hope you enjoy 
-reading what we have to say!</p>
-</div>
-</a>
-<a href="posts/2021-09-02-coronavirus-disease-in-egypt/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">Aug. 30, 2021</div>
-<div class="dt-authors">
-<div class="dt-author">Yanhui LI</div>
-</div>
-</div>
-<div class="thumbnail">
-<img/>
-</div>
-<div class="description">
-<h2>Coronavirus disease in Egypt</h2>
-<div class="dt-tags"></div>
-<p>as of 30 August 2021</p>
-</div>
-</a>
-</div>
-<div class="posts-more">
-<a href="#">More articles &raquo;</a>
-</div>
-</div>
-<!--/radix_placeholder_article_listing-->
 
 <div class="d-title">
-<h1>My Blog</h1>
+<h1>Coronavirus (COVID-19) Data Collections</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
 
@@ -2257,6 +2090,10 @@ reading what we have to say!</p>
 
 
 <div class="d-article">
+<div class="layout-chunk" data-layout="l-body">
+<div id="htmlwidget-1c58d0c92742078974e6" style="width:624px;height:384px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1c58d0c92742078974e6">{"x":{"visdat":{"4c1a75d0cc0b":["function () ","plotlyVisDat"]},"cur_data":"4c1a75d0cc0b","attrs":{"4c1a75d0cc0b":{"values":{},"labels":{},"parents":{},"domain":{"column":0},"textinfo":"label+value+percent parent","name":"Confirmed","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"treemap"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"hovermode":"closest","showlegend":false},"source":"A","config":{"showSendToCloud":false},"data":[{"values":[39057368,32768880,20752281,6834834,6803323,6789189,6366408,5178889,4960744,4907264,4847298,4534499,4079267,3947035,3341264,2888385,2770575,2382769,2149591,1976202,1973984,1881213,1725357,1678944,1638330,1504157,1497261,1473847,1190063,1182810,1160119,1123413,1097452,1061488,1036019,859203,856049,812227,796259,776962,761124,759952,717374,687076,662752,646513,601226,583658,545033,543318,501201,490467,480364,465799,461145,458455,457037,453689,449489,436081,421103,409736,395883,394791,384778,373330,351065,350017,346183,339816,338757,334343,307471,306810,302239,298165,288162,272453,267204,266657,251421,241611,235298,232571,213820,213379,206145,195574,191805,175624,175589,158389,156927,155639,153148,146053,145333,143603,142400,141599,126565,124900,124581,119825,118266,114787,113588,107052,94060,92616,87131,83425,80960,75672,72753,67459,67402,60386,55518,54863,53868,47331,46211,44606,43054,42862,37708,36123,35283,33432,29400,28967,27779,25819,25403,21261,20850,19976,18139,17838,17399,16817,16515,16220,15991,15032,14873,14816,14395,13768,13588,13366,11994,11747,11427,11270,11167,10705,10196,9698,9326,8155,7829,6642,6367,5843,5766,5594,5321,4991,4931,4065,3520,3266,3188,2641,2595,2593,2336,1713,1638,1367,1053,777,712,357,27,20,9,4,4,3,2,2,1],"labels":["US","India","Brazil","France","Russia","United Kingdom","Turkey","Argentina","Iran","Colombia","Spain","Italy","Indonesia","Germany","Mexico","Poland","South Africa","Ukraine","Peru","Philippines","Netherlands","Iraq","Malaysia","Czechia","Chile","Canada","Bangladesh","Japan","Thailand","Belgium","Pakistan","Sweden","Romania","Israel","Portugal","Kazakhstan","Morocco","Hungary","Jordan","Switzerland","Nepal","Serbia","United Arab Emirates","Austria","Tunisia","Cuba","Lebanon","Greece","Georgia","Saudi Arabia","Ecuador","Bolivia","Belarus","Guatemala","Costa Rica","Paraguay","Panama","Bulgaria","Vietnam","Sri Lanka","Azerbaijan","Kuwait","Burma","Slovakia","Uruguay","Croatia","Ireland","Dominican Republic","Denmark","West Bank and Gaza","Honduras","Venezuela","Libya","Ethiopia","Oman","Lithuania","Egypt","Bahrain","Moldova","Slovenia","Korea, South","Armenia","Kenya","Qatar","Mongolia","Bosnia and Herzegovina","Zambia","Algeria","Nigeria","North Macedonia","Kyrgyzstan","Norway","Botswana","Uzbekistan","Afghanistan","Mozambique","Albania","Kosovo","Latvia","Estonia","Finland","Namibia","Zimbabwe","Uganda","Ghana","Montenegro","Cyprus","China","El Salvador","Cambodia","Rwanda","Cameroon","Maldives","Luxembourg","Senegal","Singapore","Jamaica","Malawi","Cote d'Ivoire","Congo (Kinshasa)","Australia","Angola","Fiji","Trinidad and Tobago","Eswatini","Madagascar","Sudan","Malta","Cabo Verde","Mauritania","Guinea","Suriname","Syria","Gabon","Guyana","Togo","Haiti","Seychelles","Bahamas","Papua New Guinea","Somalia","Tajikistan","Timor-Leste","Belize","Taiwan*","Andorra","Mali","Laos","Lesotho","Burkina Faso","Congo (Brazzaville)","Benin","Burundi","Djibouti","South Sudan","Central African Republic","Nicaragua","Iceland","Mauritius","Gambia","Equatorial Guinea","Saint Lucia","Yemen","Eritrea","Sierra Leone","Niger","Guinea-Bissau","Liberia","San Marino","Chad","Barbados","Comoros","New Zealand","Liechtenstein","Monaco","Brunei","Bhutan","Sao Tome and Principe","Saint Vincent and the Grenadines","Antigua and Barbuda","Dominica","Tanzania","Saint Kitts and Nevis","Summer Olympics 2020","Diamond Princess","Grenada","Holy See","Solomon Islands","MS Zaandam","Marshall Islands","Vanuatu","Samoa","Kiribati","Palau","Micronesia"],"parents":["Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed"],"domain":{"column":0},"textinfo":"label+value+percent parent","name":"Confirmed","type":"treemap","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(255,255,255,1)"}},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
