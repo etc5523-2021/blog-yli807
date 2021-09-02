@@ -26,7 +26,7 @@ library(naniar)
 ```
 
 
-# Data description
+## Data description 📄
 
 The data sets used in this blog post can mainly breakdown into two parts. 
 
@@ -39,7 +39,7 @@ As Egypt is the main observation country, while filtering the dataset, countries
 
 
 
-# Coronavirus (COVID-19) Cases in Egypt
+## COVID-19 Cases in Egypt 🇪🇬
 
 As of August 30, 2021, 288,162 confirmed cases of COVID-19 and 16,727 in Egypt were acknowledged by the Ministry of Health and Population. 
 
@@ -89,7 +89,7 @@ gt(egydf1,caption = "Total Covid19 Cases in Egypt") %>%
 
 
 
-## Egypt situation within its region, Middle East & North Africa
+### Egypt situation within its region, Middle East & North Africa 🌍
 
 The below table shows the COVID-19 Cases in Middle East & North Africa, the region that Egypt belongs to. Egypt is ranking 14 out of 21 in total amount of confirmed cases, however, the death rate is top 3 with 5.8%, even higher than Iran, which has the largest number of confirmed cases with 4,960,744 in this region, 17 times more than Egypt.
 
@@ -139,7 +139,7 @@ Back to Egypt, it ranks 17th in the GDP per capita. As a lower middle income cou
 
 
 
-# Coronavirus (COVID-19) Vaccinations in Egypt
+## COVID-19 Vaccinations in Egypt 💉
 
 The following table shows the total number COVID-19 vaccinations dosed administered, total number of people who have received at least one dose of the COVID-19 vaccine, and share of the population fully vaccinated against COVID-19. As the table shows, a few Egyptian finished their second dose of vaccination since May 2021. But as of the latest data, on August 27,2021, only 3% of people in Egypt are fully vaccinated. In other words, the coronavirus still poses a serious threat to the immune system of most Egyptians.
 
@@ -172,7 +172,7 @@ DT::datatable(egyvac, options = list(pageLength = 10))
 ```
 
 
-## Data source
+### Data source ⚙️
 
 Joachim Gassen (NA). tidycovid19: Download, Tidy and Visualize Covid-19
 Related Data. R package version 0.0.0.9000.
