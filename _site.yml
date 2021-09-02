@@ -1,14 +1,17 @@
 name: "yli807-BlogEntry"
-title: "Yanhui LI's Blog for Coronavirus (COVID-19) Cases"
+title: "Yanhui LI's 1st Blog"
 description: |
   Yanhui LI's Blog for ETC5523
 output_dir: "docs"
 navbar:
   right:
-    - text: "Home"
+    - text: "Home🏠"
       href: index.html
-    - text: "Posts"
+    - text: "Posts📊"
       href: post.html
-    - text: "About"
+    - text: "About😎"
       href: about.html
-output: distill::distill_article
+output:
+    distill::distill_article:
+        css: styles.css
+
