@@ -132,7 +132,7 @@ library(formattable)
 formattable(africadf, list(
     confirmed = color_tile("transparent", "#7c7ed6"),
     deathRate = color_tile("transparent", "lightpink"),
-    gdp2010 = color_tile("transparent", "#7DCEA0")
+    gdpCapita2010 = color_tile("transparent", "#7DCEA0")
     ),
     align = "c",
     caption = "Covid19 Cases in Middle East & North Africa")
