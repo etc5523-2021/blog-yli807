@@ -91,12 +91,12 @@ gt(egydf1,caption = "Total Covid19 Cases in Egypt") %>%
 
 ### Egypt situation within its region, Middle East & North Africa 🌍
 
-The below table shows the COVID-19 Cases in Middle East & North Africa, the region that Egypt belongs to. Egypt is ranking 14 out of 21 in total amount of confirmed cases, however, the death rate is top 3 with 5.8%, even higher than Iran, which has the largest number of confirmed cases with 4,960,744 in this region, 17 times more than Egypt.
+Table \@ref(tab:africadf) shows the COVID-19 Cases in Middle East & North Africa, the region that Egypt belongs to. Egypt is ranking 14 out of 21 in total amount of confirmed cases, however, the death rate is top 3 with 5.8%, even higher than Iran, which has the largest number of confirmed cases with 4,960,744 in this region, 17 times more than Egypt.
 
 It is worth pointing out that Yemen is the country with the lowest confirmed case of 7,829 in this region, but has the largest death rate at 18.76%. This might because Yemen is one of the poorest of the world's low income country, with a GDP per capita around 633USD in 2010. Therefore, reasons why they has the smallest confirmed cases and largest mortality rate might because they do not have enough capital to maintain their medical resources, like testing and treatment.
 
 
-```{r africadf,fig.cap="Covid19 Cases in Middle East & North Africa"}
+```{r africadf,layout = "l-body-outset"}
 africacovid <- df %>% 
   filter(date == "2021-08-30") %>% 
   filter(region == "Middle East & North Africa") %>% 
@@ -115,11 +115,16 @@ africadf <- africacovid %>%
   relocate(Rank, .before = country) %>% 
   mutate(deathRank = order(order(deathRate, decreasing = T))) %>% 
   relocate(deathRank, .before = gdp_capita) %>%
-  mutate(gdpCapitaRank = order(order(gdp_capita, decreasing = T))) %>% 
-  rename(gdpCapita_2010 = `gdp_capita`) %>% 
-  relocate(income, .after = gdpCapitaRank) %>% 
-  rename(Income_level = `income`)
+  mutate(gdpRank = order(order(gdp_capita, decreasing = T))) %>% 
+  rename(gdpCapita2010 = `gdp_capita`) %>% 
+  relocate(income, .after = gdpRank) %>% 
+  rename(IncomeLevel = `income`) %>% 
+  mutate(across(is.numeric, ~round(.,3)))
 
+africadf$IncomeLevel <- gsub("income","",as.character(africadf$IncomeLevel))
+
+africadf$country[6]<-"UAE"
+africadf$country[11]<-"PSE"
 library(kableExtra)
 library(formattable)
 
@@ -127,9 +132,10 @@ library(formattable)
 formattable(africadf, list(
     confirmed = color_tile("transparent", "#7c7ed6"),
     deathRate = color_tile("transparent", "lightpink"),
-    gdpCapita_2010 = color_tile("transparent", "#7DCEA0")
+    gdp2010 = color_tile("transparent", "#7DCEA0")
     ),
-    align = "c")
+    align = "c",
+    caption = "Covid19 Cases in Middle East & North Africa")
 
 ```
 
@@ -143,7 +149,7 @@ Back to Egypt, it ranks 17th in the GDP per capita. As a lower middle income cou
 
 The following table shows the total number COVID-19 vaccinations dosed administered, total number of people who have received at least one dose of the COVID-19 vaccine, and share of the population fully vaccinated against COVID-19. As the table shows, a few Egyptian finished their second dose of vaccination since May 2021. But as of the latest data, on August 27,2021, only 3% of people in Egypt are fully vaccinated. In other words, the coronavirus still poses a serious threat to the immune system of most Egyptians.
 
-```{r egyvac, fig.cap="Vaccinations information in Egypt"}
+```{r egyvac}
 totalvac_egy <- read_csv(here::here("/Users/yanhuili/Desktop/blog-yli807/cumulative-covid-vaccinations.csv")) %>% 
   filter(Code == "EGY")
 
@@ -168,7 +174,7 @@ egyvac <- left_join(vacdoses,receviedall_egy) %>%
 
 
 
-DT::datatable(egyvac, options = list(pageLength = 10))
+DT::datatable(egyvac, options = list(pageLength = 10),caption = "Table 3 ：Vaccinations information in Egypt")
 ```
 
 
