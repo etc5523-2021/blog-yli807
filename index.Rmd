@@ -12,7 +12,7 @@ library(plotly)
 
 Corona Virus Disease 2019，COVID-19, refers to the contagious disease caused by severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2), and it is an ongoing pandemic till today.
 
-The following interactive treemap demonstrates the total number of confirmed cases by countries as of 30 August 2021. We can see the United States has the largest amount of confirmed cases with 39,057,368 account for 18% around the world, and India is the second place with 15%. You can get the cumulative confirmed cases number of other countires through clicking on the treemap.
+The following interactive treemap demonstrates the total number of confirmed cases by countries as of 30 August 2021. We can see the United States has the largest amount of confirmed cases with 39,057,368 account for 18% around the world, and India is the second place with 15%. You can get the cumulative confirmed cases number of other countries through clicking on the treemap.
 
 ```{r}
 library(coronavirus)
