@@ -1,0 +1,111 @@
+---
+title: "Coronavirus disease in Qatar"
+description: |
+  A short description of the post.
+author:
+  - name: Yanhui LI
+date: 09-08-2021
+output:
+  distill::distill_article:
+    self_contained: false
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(tab.align = "center",
+                      fig.align = "center",
+                      echo = FALSE)
+
+library(dplyr)
+library(tidyr)
+library(plotly)
+library(ggplot2)
+library(scales)
+library(tidyverse)
+library(naniar)
+
+library(DT)
+library(lubridate)
+library(plotly)
+library(sparkline)
+library(formattable)
+library(viridis)
+library(hrbrthemes)
+```
+
+# Data Description
+```{r}
+library(tidycovid19)
+#df2 <- download_merged_data(cached = TRUE, silent = TRUE): save to csv to easy knit
+#write_csv(df2,(here::here("/Users/yanhuili/Desktop/blog-yli807/df2.csv")))
+df2 <- read_csv(here::here("/Users/yanhuili/Desktop/blog-yli807/df2.csv"))
+```
+
+Three data sets are used in this second blog post to illustrate the COVID-19 situation in Qatar. One is from *tidycovid19* package by Joachim Gassen, and other two are collected and maintained by *Our World in Data*, in a completely open access under the Creative Commons BY license. 
+
+Datasets will be filtered and remained the only country, Qatar, which is the main observation country in this blog post.
+
+
+# Data Exploration
+
+Qatar, officially the State of Qatar, is the third-highest GDP per capita in the world, and it has a high standard of living, with many social benefits available to its citizens.
+
+```{r}
+knitr::include_graphics("images/Qatartopview.jpeg")
+```
+
+However, Qatar is not a 'big' country from geographically. It occupies the small Qatar Peninsula on the northeastern coast of the Arabian Peninsulaw with only 11,581 km². The reason why Qatar became wealthy is because of the discovery of oil reserves in the 1940s. The entire economy of Qatar is completely changed from then and now Qatar owns one of the world's largest reserves of oil and natural gas.
+
+```{r}
+knitr::include_graphics("images/QatarMap.jpeg")
+```
+
+
+
+## Qatar performance in the Table 2 of [post 1](https://etc5523-2021.github.io/blog-yli807/posts/2021-09-02-coronavirus-disease-in-egypt/)
+
+From the previous analysis of Egypt, we can see that in the region of Middle East & North Africa,  Qatar is ranking the first place in GDP per capita, and the rate of deaths due to COVID-19 is ranking 21 out of 21 with 0.259%, which means Qatar has the lowest death rate in this region.
+
+According WHO, a positive rate of less than 5% is one indicator that the epidemic is under control in a country. Therefore, to better understand the COVID-19 situation in Qatar, positive rate of testing also be included in the Table \@ref(tab:post1table), which is only 0.037% and demonstrates that Qatar is able to control COVID-19 within its country.
+
+
+```{r post1table,layout = "l-body-outset"}
+post1table <- df2 %>% 
+  filter(date == "2021-08-30") %>% 
+  filter(region == "Middle East & North Africa") %>% 
+  select(c(`country`,`confirmed`,`deaths`,`gdp_capita`,`income`,`positive_rate`)) %>% 
+  mutate(confirmed = as.double(confirmed),
+         deathRate = (deaths/confirmed)*100) %>% 
+  relocate(deathRate, .before = gdp_capita) %>%
+  arrange(desc(confirmed)) 
+
+post1table$gdp_capita[19]<-2807.0000
+post1table$gdp_capita[20]<-1343.2700
+
+post1df <- post1table %>% 
+  select(-`deaths`) %>% 
+  mutate(Rank = 1:nrow(post1table)) %>% 
+  relocate(Rank, .before = country) %>% 
+  mutate(deathRank = order(order(deathRate, decreasing = T))) %>% 
+  relocate(deathRank, .before = gdp_capita) %>%
+  mutate(gdpRank = order(order(gdp_capita, decreasing = T))) %>% 
+  select(-`gdp_capita`) %>% 
+  relocate(income, .after = gdpRank) %>% 
+  rename(IncomeLevel = `income`) %>% 
+  mutate(across(is.numeric, ~round(.,3))) 
+
+post1df$IncomeLevel <- gsub("income","",as.character(post1df$IncomeLevel))
+
+formattable(post1df[16,], list(
+    Rank = color_tile("transparent", "#7c7ed6"),
+    deathRank = color_tile("transparent", "lightpink"),
+    positive_rate = color_tile("transparent", "#7DCEA0"),
+    gdpRank = color_tile("transparent", "#aedff2")
+    ),
+    align = "c",
+    caption = "Qatar data in post 1")
+
+```
+
