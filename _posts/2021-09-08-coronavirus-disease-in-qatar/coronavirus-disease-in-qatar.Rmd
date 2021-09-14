@@ -44,7 +44,42 @@ df2 <- read_csv(here::here("/Users/yanhuili/Desktop/blog-yli807/df2.csv"))
 
 Three data sets are used in this second blog post to illustrate the COVID-19 situation in Qatar. One is from *tidycovid19* package by Joachim Gassen, and other two are collected and maintained by *Our World in Data*, in a completely open access under the Creative Commons BY license. 
 
-Datasets will be filtered and remained the only country, Qatar, which is the main observation country in this blog post.
+As the original datasets are large and messy, the following tables will only show the datasets that have already be cleaned and remained the data related to Qatar, which is the main observation country in this blog post.
+
+From *tidycovid19* package:
+ 
+- *qatdf*
+
+| variable      | class         | description                                                    |                       
+|:------------- |:--------------|:-------------------------------------------------------------- |
+| iso3c         | char          | ISO3c country code as defined by ISO 3166-1 alpha-3            |
+| country       | char          | Country name                                                   |
+| date          | Date          | Calendar date                                                  |
+| confirmed     | num           | Confirmed Covid-19 cases as reported by JHU CSSE (accumulated) |
+| deaths        | num           | Covid-19-related deaths as reported by JHU CSSE (accumulated)  |
+| recovered     | num           | Covid-19 recoveries as reported by JHU CSSE (accumulated)      |
+| year          | num           | Calendar date of year                                          |
+| month         | num           | Calendar date of month                                         |
+
+
+From *Our World in Data* :
+
+- *dailyvac*
+
+| variable                              | class  | description                                                           |                       
+|:------------------------------------- |:-------|:--------------------------------------------------------------------- |
+| Entity                                | char   | Entity name                                                           |
+| Code                                  | char   | ISO3c country code as defined by ISO 3166-1 alpha-3                   |
+| Day                                   | Date   | Calendar date                                                         |
+| new_vaccinations_smoothed_per_million | num    | New confirmed cases of COVID-19 (7-day smoothed) per 1,000,000 people |
+
+- *qatvac*
+
+| variable      | class | description                                                                                    |                       
+|:------------- |:------|:---------------------------------------------------------------------------------------------- |
+| date          | Date  | Date of observation                                                                            |
+| Vaccinated    | factor| Total vaccination doses administered ; Received at least one vaccine dose; Received all doses prescribed by the vaccination protocol |
+| Count         | num   | Number of Vaccinated variable                                                         |
 
 
 # Data Exploration
@@ -120,7 +155,8 @@ qatdf <- df2 %>%
 
 #write_csv(qatdf,(here::here("/Users/yanhuili/Desktop/blog-yli807/qatdf.csv")))
 
-qatdf <- read_csv(here::here("/Users/yanhuili/Desktop/blog-yli807/qatdf.csv")) %>% 
+qatdf <- read_csv(here::here("/Users/yanhuili/Desktop/blog-yli807/qatdf.csv")) %>%
+  select(c(iso3c,country,date,confirmed,deaths,recovered)) %>% 
   mutate(date = dmy(date),
          year = year(date),
          month = month(date))
@@ -176,7 +212,7 @@ datatable(qatable,
 
 ## Vaccination status in Qatar 💉
 
-Figure \@ref(fig:dailyvac) shows the number of COVID-19 vaccination doses administered per 100 people on September 8,2021. From the figure we can see that to compare with the income level, Qatar is very close to the high income level that not enough 0.1 difference. However, for Egypt that analyzed in the previous post, even less than half of the lower middle income level. It is really sad to know that under the control of capitalism, seems like the rich are more likely to get vaccinated.
+Figure \@ref(fig:dailyvac) shows the number of COVID-19 vaccination doses administered per 100 people as rolling 7-day average on September 8,2021. From the figure we can see that to compare with the income level, Qatar is very close to the high income level that not enough 0.1 difference. However, for Egypt that analyzed in the previous post, even less than half of the lower middle income level. It is really sad to know that under the control of capitalism, seems like the rich are more likely to get vaccinated.
 
 (Note that the dose in here is counted as a single dose, and may not equal the total number of people vaccinated)
 
@@ -196,7 +232,7 @@ dailyvacfig <- dailyvac_qat %>%
              y = new_vaccinations_smoothed_per_million,
              fill = Entity))+ 
   labs(title = "Daily COVID-19 vaccine doses administered per 100 people",
-       subtitle = "As on Sep 8, 2021",
+       subtitle = "Shown is the rolling 7-day average,as on Sep 8, 2021",
        x = "Entity", 
        y = "Administered percentage") + 
   geom_bar(stat = "identity")+ 
@@ -234,7 +270,7 @@ qatvacfig <- qatvac %>%
     geom_area(alpha=0.6 , size=.5, colour="white") +
     scale_fill_viridis(discrete = T) +
     theme_ipsum()+
-    ggtitle("Number of people vaccinated against COVID-19 in Qatar")
+    ggtitle("Number of people get vaccinated in Qatar")
 
 
 ggplotly(qatvacfig)
