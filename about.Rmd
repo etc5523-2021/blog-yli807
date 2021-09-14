@@ -1,9 +1,14 @@
 ---
 title: "About this blog"
-description: |
-  This blog is created by Yanhui LI from MBAt, Monash University.
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
+
+
+```{r}
+knitr::include_graphics("purple.gif")
+```
+
+This blog is created by Yanhui LI from MBAt, Monash University.
