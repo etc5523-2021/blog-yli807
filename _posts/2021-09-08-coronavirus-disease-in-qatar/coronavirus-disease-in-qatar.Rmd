@@ -68,7 +68,7 @@ knitr::include_graphics("images/QatarMap.jpeg")
 
 From the previous analysis of Egypt, we can see that in the region of Middle East & North Africa,  Qatar is ranking the first place in GDP per capita, and the rate of deaths due to COVID-19 is ranking 21 out of 21 with 0.259%, which means Qatar has the lowest death rate in this region.
 
-According WHO, a positive rate of less than 5% is one indicator that the epidemic is under control in a country. Therefore, to better understand the COVID-19 situation in Qatar, positive rate of testing also be included in the Table \@ref(tab:post1table), which is only 0.037% and demonstrates that Qatar is able to control COVID-19 within its country.
+According WHO, a positive rate of less than 5% is one indicator that the epidemic is under control in a country. Therefore, to better understand the COVID-19 situation in Qatar, Table \@ref(tab:post1table) also include the positive rate of testing, which is only 0.037% and demonstrates that Qatar is able to control COVID-19 within its country.
 
 
 ```{r post1table,layout = "l-body-outset"}
@@ -107,5 +107,70 @@ formattable(post1df[16,], list(
     align = "c",
     caption = "Qatar data in post 1")
 
+```
+
+
+## Overall trend of COVID-19 in Qatar
+
+The following Figure \@ref(fig:overtrend) give a picture of the trend of Qatar COVID-19 from confirmed, deaths and recovered cases. We can see that overall the confirmed cases is still increasing till now and there were total 232,571 cases on August 30, 2021. However, The recover trend is very close to the confirmed line which is a positive sign that the majority of confirmed people in Qatar were recovered. Compared to the other trends, deaths trend looks like a 'straight' line but there were still 602 people lost their lives in this one of the worst pandemics in history till the lastest updated date of this figure data.
+
+```{r qatdf}
+qatdf <- df2 %>% 
+  filter(iso3c == "QAT") %>% 
+  select(c(iso3c,country,date,confirmed,deaths,recovered,total_tests,region,income))
+
+#write_csv(qatdf,(here::here("/Users/yanhuili/Desktop/blog-yli807/qatdf.csv")))
+
+qatdf <- read_csv(here::here("/Users/yanhuili/Desktop/blog-yli807/qatdf.csv")) %>% 
+  mutate(date = dmy(date),
+         year = year(date),
+         month = month(date))
+```
+
+```{r overtrend, fig.cap= "Overall trend of Qatar's cumulative COVID-19 cases"}
+qatfig <- qatdf %>% 
+  select(date,confirmed,deaths,recovered) %>% 
+  pivot_longer(cols = c(`confirmed`:`recovered`), names_to = "Cases type", values_to = "Count") %>% 
+  ggplot(aes(x = date, y = Count, group = `Cases type`, color = `Cases type`))+ 
+  labs(title = "Trend of cumulative COVID-19 cases in Qatar", 
+       x = "Date", 
+       y = "Cases Count") + 
+  geom_line()+ 
+  scale_color_manual(values=c("#f57c27","#8f2121","#2fa329"))+
+  theme_bw()
+ggplotly(qatfig)
+```
+
+
+## Monthly changes of COVID-19 NEW cases
+
+Below is an interactive table that includes the new changes in confirmed, deaths and all recovered cases grouped by year and month from January 2020 to August 2021. It is a very handy table to measure the impact of COVID-19 on Qatar. The sparkline shows that in 2020, COVID-19 cases in Qatar start to increase rapidly in March and only had a slow down trend in July. Confirmed cases are in a uptrend generally in 2021.
+
+To have a look at the daily new cases for each month, you can play around with the sparkline by moving your mouse over it!
+
+```{r monthlyspk, layout = "l-body-outset"}
+qatable <- qatdf %>% 
+  mutate(new_cases = confirmed - lag(confirmed),
+         new_deaths = deaths - lag(deaths),
+         daily_recovered = recovered - lag(recovered)
+         ) %>% 
+  group_by(year,month) %>% 
+  summarise(new_cases = spk_chr(new_cases,
+                                type = "line"),
+            new_deaths = spk_chr(new_deaths,
+                                 type = "line"),
+            daily_recovered = spk_chr(daily_recovered,
+                                 type = "line")
+            ) 
+
+datatable(qatable, 
+           escape = FALSE,
+           filter = 'top',
+           caption = "Table 2 : Qatar monthly NEW cases",
+            colnames = c("Year","Month", "New Confirmed", "New Deaths", "New recoveries"),
+            options = list(lengthMenu = c(10, 25),
+              fnDrawCallback = 
+            htmlwidgets::JS('function(){HTMLWidgets.staticRender();}'))) %>% 
+    spk_add_deps()
 ```
 
