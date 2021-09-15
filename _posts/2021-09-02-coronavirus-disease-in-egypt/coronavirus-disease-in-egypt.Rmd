@@ -1,7 +1,7 @@
 ---
 title: "Coronavirus disease in Egypt"
 description: |
-  as of 30 August 2021 
+  A lower middle income country's performance in response to COVID-19 pandemic
 author:
   - name: Yanhui LI
 date: 08-30-2021

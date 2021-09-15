@@ -1,7 +1,7 @@
 ---
 title: "Coronavirus disease in Qatar"
 description: |
-  The performance of a high income country in response to COVID-19 pandemic
+  Will high-income country have a better performance in responding to the COVID-19 pandemics?
 author:
   - name: Yanhui LI
 date: 09-11-2021
@@ -98,12 +98,11 @@ knitr::include_graphics("images/QatarMap.jpeg")
 
 
 
-## Qatar performance in the Table 2 of [post 1](https://etc5523-2021.github.io/blog-yli807/posts/2021-09-02-coronavirus-disease-in-egypt/) 🇶🇦
+## Does Qatar have the ability to control COVID-19 within its borders? 🇶🇦
 
-From the previous analysis of Egypt, we can see that in the region of Middle East & North Africa,  Qatar is ranking the first place in GDP per capita, and the rate of deaths due to COVID-19 is ranking 21 out of 21 with 0.259%, which means Qatar has the lowest death rate in this region.
+From the [table 2](https://etc5523-2021.github.io/blog-yli807/posts/2021-09-02-coronavirus-disease-in-egypt/) in previous analysis of Egypt, we can see that in the region of Middle East & North Africa,  Qatar is ranking the first place in GDP per capita, and the rate of deaths due to COVID-19 is ranking 21 out of 21 with 0.259%, which means Qatar has the lowest death rate in this region.
 
-According WHO, a positive rate of less than 5% is one indicator that the epidemic is under control in a country. Therefore, to better understand the COVID-19 situation in Qatar, Table \@ref(tab:post1table) also include the positive rate of testing, which is only 0.037% and demonstrates that Qatar is able to control COVID-19 within its country.
-
+According WHO, a positive rate of less than 5% is one of the indicators that the epidemic is under control in a country. Therefore, Table \@ref(tab:post1table) also include the positive rate of testing, which is only 0.037%.
 
 ```{r post1table,layout = "l-body-outset"}
 post1table <- df2 %>% 
@@ -144,9 +143,7 @@ formattable(post1df[16,], list(
 ```
 
 
-## Overall trend of COVID-19 in Qatar 📈
-
-The following Figure \@ref(fig:overtrend) give a picture of the trend of Qatar COVID-19 from confirmed, deaths and recovered cases. We can see that overall the confirmed cases is still increasing till now and there were total 232,571 cases on August 30, 2021. However, The recover trend is very close to the confirmed line which is a positive sign that the majority of confirmed people in Qatar were recovered. Compared to the other trends, deaths trend looks like a 'straight' line but there were still 602 people lost their lives in this one of the worst pandemics in history till the lastest updated date of this figure data.
+To better understand the COVID-19 situation in Qatar, following Figure \@ref(fig:overtrend) give a picture of the trend of Qatar COVID-19 from confirmed, deaths and recovered cases. We can see that overall the confirmed cases is still increasing till now and there were total 232,571 cases on August 30, 2021. Compared to the other trends, deaths trend looks like a 'straight' line but there were still 602 people lost their lives in this one of the worst pandemics in history till the lastest updated date of this figure data.
 
 ```{r qatdf}
 qatdf <- df2 %>% 
@@ -177,11 +174,17 @@ ggplotly(qatfig)
 ```
 
 
-## Monthly changes of COVID-19 NEW cases 📅
+However, The recover trend is very close to the confirmed line and on its way up as time goes by, which is a good sign that the majority of confirmed people in Qatar were recovered. Overall with a high rate of recovered and low rate of deaths and positive testing rate, we could say that Qatar is able to control COVID-19 within its country.
 
-Below is an interactive table that includes the new changes in confirmed, deaths and all recovered cases grouped by year and month from January 2020 to August 2021. It is a very handy table to measure the impact of COVID-19 on Qatar. The sparkline shows that in 2020, COVID-19 cases in Qatar start to increase rapidly in March and only had a slow down trend in July. Confirmed cases are in a uptrend generally in 2021.
 
-To have a look at the daily new cases for each month, you can play around with the sparkline by moving your mouse over it!
+
+## What is the monthly trend of COVID-19 NEW cases?  📅
+
+Below is an interactive table that includes the new changes in confirmed, deaths and all recovered cases grouped by year and month from January 2020 to August 2021. It is a very handy table to measure the impact of COVID-19 on Qatar. 
+
+The sparkline shows that in 2020, COVID-19 cases in Qatar start to increase rapidly in March and only had a slow down trend in July. Confirmed cases are in a uptrend generally in 2021.
+
+(To have a look at the number of daily new cases, you can play around with the sparkline by moving your mouse over it!)
 
 ```{r monthlyspk, layout = "l-body-outset"}
 qatable <- qatdf %>% 
@@ -210,11 +213,42 @@ datatable(qatable,
 ```
 
 
-## Vaccination status in Qatar 💉
+## Will the vaccination rate be higher in the high income country?  💉
 
-Figure \@ref(fig:dailyvac) shows the number of COVID-19 vaccination doses administered per 100 people as rolling 7-day average on September 8,2021. From the figure we can see that to compare with the income level, Qatar is very close to the high income level that not enough 0.1 difference. However, for Egypt that analyzed in the previous post, even less than half of the lower middle income level. It is really sad to know that under the control of capitalism, seems like the rich are more likely to get vaccinated.
+Before we start comparing, let's have a look at the overall vaccination situation in Qatar first. Figure \@ref(fig:qatvac) below shows the vaccination status breakdown to partly or fully vaccinated. Partly vaccinated means that a person have received only 1 dose out of 2-dose vaccine protocol and fully vaccinated means they have received all the doses of their vaccine no matter in the vaccine protocol of single-dose or two-dose (Ritchie et al.,2020).
 
-(Note that the dose in here is counted as a single dose, and may not equal the total number of people vaccinated)
+We can see that people in Qatar got vaccinated from April 29,2021, and 2,218,292 people has already fully vaccinated, account for 48.45% , nearly half of the total number of COVID-19 vaccination doses administered.
+
+As the population of Qatar is 2,930,524, therefore, nearly 76% of total population to have fully received vaccine as of the date of this post been published!
+
+```{r qatvac, fig.cap = "Vaccinations of Qatar"}
+owid <- read_csv(here::here("/Users/yanhuili/Desktop/blog-yli807/owid-covid-data.csv"))
+
+qatvac <- owid %>%
+  filter(location == "Qatar") %>% 
+  select(date,total_vaccinations,people_vaccinated,people_fully_vaccinated) %>% 
+  na.omit() %>%
+  pivot_longer(cols = c(`total_vaccinations`:`people_fully_vaccinated`), names_to = "Vaccinated", values_to = "Count")
+
+qatvac$Vaccinated <- factor(qatvac$Vaccinated, levels = c("total_vaccinations","people_vaccinated","people_fully_vaccinated"))
+
+qatvacfig <- qatvac %>% 
+  ggplot(aes(x = date,
+             y = Count,
+             fill = Vaccinated)) + 
+    geom_area(alpha=0.6 , size=.5, colour="white") +
+    scale_fill_viridis(discrete = T) +
+    theme_ipsum()+
+    ggtitle("Number of people get vaccinated in Qatar")
+
+
+ggplotly(qatvacfig)
+```
+
+
+Go back to the question, Figure \@ref(fig:dailyvac) shows the number of COVID-19 vaccination doses administered per 100 people as rolling 7-day average on September 8,2021. From the figure we can see that to compare with the income level, Qatar is very close to the high income level that not enough 0.1 difference. However, for Egypt that analyzed in the previous post, even less than half of the lower middle income level. 
+
+It is sad that know that under the capitalism, the rich seem to have a easier access to vaccine resources than the poor.
 
 ```{r dailyvac, fig.cap= "Daily dose of COVID-19 vaccine per 100 people" }
 dailyvac <- read_csv(here::here("/Users/yanhuili/Desktop/blog-yli807/blog2-dailydoses-percapita.csv"))
@@ -246,35 +280,7 @@ dailyvacfig +
         legend.direction = "horizontal")
 ```
 
-Figure \@ref(fig:qatvac) below shows the vaccination status by those who has been partly or fully vaccinated. Partly vaccinated means that a person have received only 1 dose out of 2-dose vaccine protocol and fully vaccinated means they have received all the doses of their vaccine no matter in the vaccine protocol of single-dose one or two-dose (Ritchie et al.,2020).
-
-We can see that people in Qatar got vaccinated from April 29,2021, and 2,218,292 people has already fully vaccinated, account for 48.45% , nearly half of the total number of COVID-19 vaccination doses administered.
-
-As the population of Qatar is 2,930,524, therefore, nearly 76% of total population to have fully received vaccine as of the date of this post been published!
-
-```{r qatvac, fig.cap = "Vaccinations of Qatar"}
-owid <- read_csv(here::here("/Users/yanhuili/Desktop/blog-yli807/owid-covid-data.csv"))
-
-qatvac <- owid %>%
-  filter(location == "Qatar") %>% 
-  select(date,total_vaccinations,people_vaccinated,people_fully_vaccinated) %>% 
-  na.omit() %>%
-  pivot_longer(cols = c(`total_vaccinations`:`people_fully_vaccinated`), names_to = "Vaccinated", values_to = "Count")
-
-qatvac$Vaccinated <- factor(qatvac$Vaccinated, levels = c("total_vaccinations","people_vaccinated","people_fully_vaccinated"))
-
-qatvacfig <- qatvac %>% 
-  ggplot(aes(x = date,
-             y = Count,
-             fill = Vaccinated)) + 
-    geom_area(alpha=0.6 , size=.5, colour="white") +
-    scale_fill_viridis(discrete = T) +
-    theme_ipsum()+
-    ggtitle("Number of people get vaccinated in Qatar")
-
-
-ggplotly(qatvacfig)
-```
+(Note that the dose in here is counted as a single dose, and may not equal the total number of people vaccinated)
 
 
 # Reference
