@@ -34,6 +34,19 @@ library(viridis)
 library(hrbrthemes)
 ```
 
+Qatar, officially the State of Qatar, is the third-highest GDP per capita in the world, and it has a high standard of living, with many social benefits available to its citizens.
+
+```{r}
+knitr::include_graphics("images/Qatartopview.jpeg")
+```
+
+However, Qatar is not a 'big' country from geographically. It occupies the small Qatar Peninsula on the northeastern coast of the Arabian Peninsulaw with only 11,581 km². The reason why Qatar became wealthy is because of the discovery of oil reserves in the 1940s. The entire economy of Qatar is completely changed from then and now Qatar owns one of the world's largest reserves of oil and natural gas.
+
+```{r}
+knitr::include_graphics("images/QatarMap.jpeg")
+```
+
+
 # Data Description
 ```{r}
 library(tidycovid19)
@@ -83,20 +96,6 @@ From *Our World in Data* :
 
 
 # Data Exploration
-
-Qatar, officially the State of Qatar, is the third-highest GDP per capita in the world, and it has a high standard of living, with many social benefits available to its citizens.
-
-```{r}
-knitr::include_graphics("images/Qatartopview.jpeg")
-```
-
-However, Qatar is not a 'big' country from geographically. It occupies the small Qatar Peninsula on the northeastern coast of the Arabian Peninsulaw with only 11,581 km². The reason why Qatar became wealthy is because of the discovery of oil reserves in the 1940s. The entire economy of Qatar is completely changed from then and now Qatar owns one of the world's largest reserves of oil and natural gas.
-
-```{r}
-knitr::include_graphics("images/QatarMap.jpeg")
-```
-
-
 
 ## Does Qatar have the ability to control COVID-19 within its borders? 🇶🇦
 
